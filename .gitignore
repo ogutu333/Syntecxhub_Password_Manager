@@ -1,0 +1,14 @@
+# Python virtual environments
+venv/
+password-manager/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Password vault - NEVER UPLOAD
+password-manager/vault.json
+password-manager/vault.tmp
+
+# Environment variables
+.env
