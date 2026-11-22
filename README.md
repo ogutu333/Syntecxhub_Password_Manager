@@ -27,24 +27,7 @@ This project gave me an opportunity to apply Python programming and explore prac
 - JSON
 - Kali Linux
 
-## Project Structure
-
-```text
-Syntecxhub_Password_Manager/
-│
-├── .gitignore
-├── README.md
-├── evidence/
-│   ├── application-menu.png
-│   ├── master-password.png
-│   ├── add-credentials.png
-│   ├── encrypted-vault.png
-│   └── encryption-code.png
-│
-└── password-manager/
-    ├── password_manager.py
-    └── requirements.txt
-```
+## Project Structure Info
 
 The encrypted `vault.json` file is generated locally when the application creates a vault. It is excluded from Git tracking to prevent sensitive data from being uploaded to GitHub.
 
@@ -107,7 +90,7 @@ Demonstrates adding a sample website, username, and password to the vault.
 
 Shows the encrypted JSON vault and demonstrates how stored information is protected rather than saved as readable credentials.
 
-![Encrypted Vault](evidence/encrypted-vault.png)
+![Encrypted Vault](evidence/encrypted_vault.png)
 
 ### 5. Encryption Implementation
 
