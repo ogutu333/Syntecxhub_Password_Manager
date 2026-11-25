@@ -112,25 +112,45 @@ Highlights the Python functions responsible for key derivation, encryption, and 
 | Base64 Encoding | Represents binary encryption data in JSON |
 | `.gitignore` | Prevents the local vault and virtual environment from being tracked by Git |
 
-## What I Learned
+## Threat Model & Security Considerations
 
-Through this project, I gained practical experience with:
+This password manager is designed to protect locally stored credentials against unauthorised access, particularly if the encrypted vault is copied or accessed without the master password.
 
-- Implementing encryption and decryption using Python.
-- Understanding symmetric encryption and authenticated encryption.
-- Using password-based key derivation.
-- Handling sensitive information in a local application.
-- Managing Python dependencies and virtual environments.
-- Using Git and GitHub to manage and document a cybersecurity project.
+### Threats Considered
+
+| Threat | Security Consideration |
+|---|---|
+| Offline Brute-Force Attacks | Scrypt increases the computational cost of guessing the master password, making large-scale password guessing more expensive. However, weak master passwords remain vulnerable. |
+| Vault Theft | AES-256-GCM encrypts stored credentials, so obtaining the vault file alone should not expose the plaintext passwords without the encryption key. |
+| Data Tampering | AES-256-GCM provides authenticated encryption, allowing unauthorised modifications to encrypted vault data to be detected during decryption. |
+| Credential Exposure in GitHub | `.gitignore` excludes the local vault file from version control, reducing the risk of accidentally publishing stored credentials. |
+
+## Attacker Perspective
+
+An attacker targeting this application might first attempt to obtain a copy of the local `vault.json` file and perform offline password guessing against the encrypted data. They could also target the host machine using keyloggers or malware to capture credentials when the vault is unlocked. To address these risks, I implemented Scrypt-based key derivation, AES-256-GCM authenticated encryption, and excluded the local vault from Git tracking. However, endpoint compromise remains outside the protection provided by the current implementation.
+
+### Security Limitations
+
+The current implementation does not protect against every attack:
+
+- **Memory Scraping:** Malware with sufficient access to the system could potentially extract decrypted credentials or encryption keys from process memory.
+- **Keyloggers:** Malicious software could capture the master password as it is entered.
+- **Compromised Operating System:** An attacker with control of the host operating system could potentially access credentials after the vault is unlocked.
+- **Vault Rollback:** An attacker could potentially replace the current vault with an older valid copy. The current implementation does not provide rollback detection.
+- **Weak Master Passwords:** Scrypt increases the cost of offline password guessing but cannot compensate for a weak master password.
+
+These limitations highlight the importance of protecting the host system alongside the encrypted vault.
 
 ## Future Improvements
 
-- Add automatic vault locking after inactivity.
-- Implement password strength checking.
-- Add password generation functionality.
-- Improve input validation and error handling.
-- Add automated unit tests.
-- Introduce a graphical user interface.
+- **Automatic Vault Locking:** Implement session timeouts to reduce the risk of unauthorised access when the application is left unattended.
+- **Master Password Policy:** Introduce password strength validation to reduce the risk of weak master passwords and offline brute-force attacks.
+- **Secure Password Generation:** Add cryptographically secure random password generation to help users create stronger credentials.
+- **Input Validation & Error Handling:** Harden credential input fields against malformed input, unexpected data types and injection attempts.
+- **Automated Security Testing:** Add unit tests for encryption, decryption, key derivation, authentication failures and tampered vault data.
+- **Vault Integrity & Recovery:** Introduce secure backup handling and mechanisms to detect unauthorised vault rollback.
+- **Secure Memory Handling:** Explore ways to minimise the exposure of decrypted credentials and sensitive key material in application memory.
+- **Graphical User Interface:** Develop a GUI while maintaining the existing encryption and secure storage mechanisms.
 
 ## Disclaimer
 
